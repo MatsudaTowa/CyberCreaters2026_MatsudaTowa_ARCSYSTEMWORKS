@@ -1,6 +1,6 @@
 //=============================================
 //
-//3DTemplate[game.h]
+//ゲーム処理[game.h]
 //Auther Matsuda Towa
 //
 //=============================================
@@ -15,6 +15,9 @@
 #include "score.h"
 #include"wave_result.h"
 
+//=============================================
+// ゲームクラス
+//=============================================
 class CGame:public CScene
 {
 public:
@@ -61,7 +64,6 @@ private:
 	static const int DELAY_FLAME = 60; //ディレイのフレーム数
 	static const int DEATH_PENALTY = -50; //死んだときのペナルティ
 	int m_nResultDelay; //リザルトへのディレイ
-	bool m_bEdit; //エディットしてるかどうか
 	static GAME_STATE m_GameState; //ゲームステート
 	LOAD_BLOCK m_LoadBlock; //読み込むときに必要なブロックの情報
 
@@ -69,7 +71,5 @@ private:
 	static CWave* m_pWave;
 
 	CWave::WAVE m_next_wave;
-
-	void LoadBlock(const std::string* pFileName);
 };
 #endif

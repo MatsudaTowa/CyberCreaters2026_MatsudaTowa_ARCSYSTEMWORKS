@@ -11,7 +11,9 @@
 #include "object2D.h"
 #include "ult_icon_effect.h"
 
+//=============================================
 //ウルト表記クラス
+//=============================================
 class CUltIcon : public CObject2D
 {
 public:
@@ -32,11 +34,16 @@ public:
 
 	void Reset();
 private:
+	static const D3DXVECTOR2 EFFECT_SIZE;
+	static const D3DXCOLOR EFFECT_COLOR;
 	bool m_isAddColor; //ウルトが溜まったらfalseに
 	float m_AddColor; //色加算の値
 	CUltIconEffect* m_pIconEffect;
 };
 
+//=============================================
+//通常キャラのウルトのアイコンクラス
+//=============================================
 class CMediumIcon : public CUltIcon
 {
 public:

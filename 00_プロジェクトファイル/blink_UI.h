@@ -17,7 +17,7 @@
 
 class CPlayer;
 //=============================================
-//残弾数表示クラス
+//ブリンクUIクラス
 //=============================================
 class CBlink_UI
 {
@@ -30,8 +30,6 @@ public:
 	void SetCurrentBlink_UI(CPlayer* player);
 
 	void SetNumber(int nParcent);
-
-	void Reset();
 
 private:
 	static const int NUM_DIGIT = 1;  //桁数

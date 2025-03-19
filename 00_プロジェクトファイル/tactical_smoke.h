@@ -1,6 +1,6 @@
 //=============================================
 //
-//スモーク処理[tactical_somoke.h]
+//敵を妨害するスモーク処理[tactical_somoke.h]
 //Auther Matsuda Towa
 //
 //=============================================
@@ -11,6 +11,9 @@
 
 #define _TACTICAL_SMOKE_H_
 
+//=============================================
+// 敵を妨害するスモーククラス
+//=============================================
 class CTacticalSmoke : public CSmoke
 {
 public:
@@ -33,8 +36,6 @@ private:
 	static constexpr float X_DECREASE = 0.01f; //Xの移動量減少定数
 
 	static const D3DXVECTOR3 SIZE; //スモークのサイズ
-
-	static const D3DXCOLOR COLOR;
 };
 
 #endif

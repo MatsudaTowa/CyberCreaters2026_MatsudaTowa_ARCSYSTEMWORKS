@@ -1,6 +1,6 @@
 //=============================================
 //
-//3DTemplate[game.cpp]
+//ゲーム[game.cpp]
 //Auther Matsuda Towa
 //
 //=============================================
@@ -16,8 +16,6 @@
 #include "dash_effect.h"
 #include "player.h"
 
-const std::string CGame::BLOCK_FILE = "data\\FILE\\block.txt";
-
 //プレイヤー
 CPlayer*CGame::m_pPlayer = nullptr;
 
@@ -29,8 +27,10 @@ CGame::GAME_STATE CGame::m_GameState = CGame::GAME_STATE::GAME_STATE_NORMAL;
 //=============================================
 //コンストラクタ
 //=============================================
-CGame::CGame():m_nResultDelay(0),m_bEdit(false), m_next_wave()
-{//イニシャライザーでプライオリティ設定、エディットしてない状態に変更
+CGame::CGame():
+m_nResultDelay(INT_ZERO),	//リザルトの遷移ディレイ
+m_next_wave()				//次のウェーブ格納変数
+{
 	//読み込むブロックの情報初期化
 	m_LoadBlock.pos = VEC3_RESET_ZERO;
 	m_LoadBlock.rot = VEC3_RESET_ZERO;
@@ -113,7 +113,6 @@ void CGame::Update()
 			m_next_wave = CWave::WAVE::NONE;
 			break;
 		case CWave::WAVE::NONE:
-
 			break;
 		default:
 			break;
@@ -136,6 +135,11 @@ void CGame::Update()
 		}
 	}
 
+	if (m_pWave != nullptr)
+	{
+		m_pWave->Update();
+	}
+	
 #ifdef _DEBUG
 	if (pKeyboard->GetTrigger(DIK_TAB))
 	{
@@ -144,25 +148,11 @@ void CGame::Update()
 		SetWave(CWave::WAVE::RESULT, m_next_wave, CManager::RESULT_SCORE_FILE[CWave::GetCurrentWave() - 1].c_str());
 	}
 
-#endif // _DEBUG
-
-	
-	if (m_pWave != nullptr)
-	{
-		m_pWave->Update();
-	}
-	
-	//if (m_bEdit == false)
-	//{
-
-
-#ifdef _DEBUG
 	if (pKeyboard->GetTrigger(DIK_F7))
 	{
 		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE::MODE_TEST);
 	}
 #endif // _DEBUG
-
 }
 
 //=============================================
@@ -174,31 +164,35 @@ void CGame::ApplyDeathPenalty()
 	{
 		//オブジェクト取得
 		CObject* pObj = CObject::Getobject(CPlayer::PLAYER_PRIORITY, nCnt);
-		if (pObj != nullptr)
-		{//ヌルポインタじゃなければ
-		 //タイプ取得
-			CObject::OBJECT_TYPE type = pObj->GetType();
+		if (pObj == nullptr)
+		{//ヌルポインタなら
+			//オブジェクトを探し続ける
+			continue;
+		}
 
-			//敵との当たり判定
-			if (type == CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+		//タイプ取得
+		CObject::OBJECT_TYPE type = pObj->GetType();
+			
+		if (type != CObject::OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+		{//プレイヤーじゃなかったら
+			//プレイヤーを探し続ける
+			continue;
+		}
+
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pObj);
+
+		for (int nCnt = 0; nCnt < pPlayer->GetDeathCnt(); nCnt++)
+		{
+			CScore* pScore = CWave::GetScore();
+
+			if (pScore->m_nScore > INT_ZERO)
 			{
-				CPlayer* pplayer = dynamic_cast<CPlayer*>(pObj);
+				pScore->AddScore(DEATH_PENALTY);
 
-				for (int nCnt = 0; nCnt < pplayer->GetDeathCnt(); nCnt++)
-				{
-					CScore* pScore = CWave::GetScore();
-
-					if (pScore->m_nScore > INT_ZERO)
-					{
-						//TODO:ADDやめろ
-						pScore->AddScore(DEATH_PENALTY);
-
-						if (pScore->m_nScore <= INT_ZERO)
-						{//0を下回ったら
-							//スコア0に
-							pScore->m_nScore = INT_ZERO;
-						}
-					}
+				if (pScore->m_nScore <= INT_ZERO)
+				{//0を下回ったら
+					//スコア0に
+					pScore->m_nScore = INT_ZERO;
 				}
 			}
 		}
@@ -274,80 +268,4 @@ void CGame::SetWave(CWave::WAVE wave, CWave::WAVE next_wave,const char* ResultFi
 CGame::GAME_STATE& CGame::GetState()
 {
 	return m_GameState;
-}
-
-//=============================================
-//ブロック読み込み
-//=============================================
-void CGame::LoadBlock(const std::string* pFileName)
-{
-	char aDataSearch[BLOCK_TXT_MAX];
-	char aEqual[BLOCK_TXT_MAX]; //[＝]読み込み用
-	int nNumBlock; //ブロックの数
-
-	//ファイルの読み込み
-	FILE* pFile = fopen(pFileName->c_str(), "r");
-
-	if (pFile == NULL)
-	{//種類の情報のデータファイルが開けなかった場合
-		//処理を終了する
-		return;
-	}
-	//ENDが見つかるまで読み込みを繰り返す
-	while (1)
-	{
-		fscanf(pFile, "%s", aDataSearch); //検索
-
-		if (!strcmp(aDataSearch, "END"))
-		{//読み込みを終了
-			fclose(pFile);
-			break;
-		}
-		if (aDataSearch[0] == '#')
-		{
-			continue;
-		}
-
-		if (!strcmp(aDataSearch, "NUM_BLOCK"))
-		{//モデル数読み込み
-			fscanf(pFile, "%s", &aEqual[0]);
-			fscanf(pFile, "%d", &nNumBlock);
-		}
-		if (!strcmp(aDataSearch, "BLOCKSET"))
-		{
-			//項目ごとのデータを代入
-			while (1)
-			{
-				fscanf(pFile, "%s", aDataSearch); //検索
-
-				if (!strcmp(aDataSearch, "END_BLOCKSET"))
-				{
-					//エネミー生成
-					CBlock::Create(m_LoadBlock.type, m_LoadBlock.pos, m_LoadBlock.rot,1,false);
-					break;
-				}
-				else if (!strcmp(aDataSearch, "POS"))
-				{
-					fscanf(pFile, "%s", &aEqual[0]);
-					fscanf(pFile, "%f %f %f",
-						&m_LoadBlock.pos.x,
-						&m_LoadBlock.pos.y,
-						&m_LoadBlock.pos.z);
-				}
-				else if (!strcmp(aDataSearch, "ROT"))
-				{
-					fscanf(pFile, "%s", &aEqual[0]);
-					fscanf(pFile, "%f %f %f",
-						&m_LoadBlock.rot.x,
-						&m_LoadBlock.rot.y,
-						&m_LoadBlock.rot.z);
-				}
-				else if (!strcmp(aDataSearch, "TYPE"))
-				{
-					fscanf(pFile, "%s", &aEqual[0]);
-					fscanf(pFile, "%d", &m_LoadBlock.type);
-				}
-			}
-		}
-	}
 }

@@ -7,6 +7,7 @@
 #include "crosshair.h"
 #include "manager.h"
 
+//テクスチャパス
 const std::string CCrossHair::CROSSHAIR_TEXTURE_NAME = "data\\TEXTURE\\crosshair000.png";
 
 //=============================================
@@ -87,11 +88,11 @@ CCrossHair* CCrossHair::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 siz
 
 	pCroshair->SetPos(pos); //pos設定
 	pCroshair->SetSize(size); //サイズ設定
-	pCroshair->SetRot(rot);
-	pCroshair->SetColor(col);
+	pCroshair->SetRot(rot);	//方向設定
+	pCroshair->SetColor(col); //カラー設定
 
 	pCroshair->SetType(OBJECT_TYPE_RETICLE); //タイプ設定
-	pCroshair->Init();
+	pCroshair->Init();	//初期化処理
 
 	return pCroshair;
 }

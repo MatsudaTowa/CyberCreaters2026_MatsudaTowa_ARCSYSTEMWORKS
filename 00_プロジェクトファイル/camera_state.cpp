@@ -33,6 +33,7 @@ void CCameraState::Ult(CCamera* camera)
 //=============================================
 void CFreeView::FreeView(CCamera* camera)
 {
+	//カメラとの距離設定
 	camera->SetLength(FREEVIEW_LENGTH);
 
 	//入力
@@ -54,7 +55,6 @@ void CThirdView::ThirdView(CCamera* camera)
 	camera->SetLength(THIRDVIEW_LENGTH);
 
 	camera->ThirdViewCamera();
-
 
 	//キーボード情報取得
 	CInputKeyboard* pKeyboard = CManager::GetInstance()->GetKeyboard();

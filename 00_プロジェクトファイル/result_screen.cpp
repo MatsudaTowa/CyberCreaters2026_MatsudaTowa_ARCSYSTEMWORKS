@@ -1,6 +1,6 @@
 //=============================================
 //
-//3DTemplate[result_Screen.h]
+//リザルト画面[result_Screen.h]
 //Auther Matsuda Towa
 //
 //=============================================
@@ -99,9 +99,9 @@ CResult_Screen* CResult_Screen::Create(D3DXVECTOR3 pos)
 
 	pResult_Screen->SetType(OBJECT_TYPE_RESULT); //タイプ設定
 
-	pResult_Screen->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));
+	pResult_Screen->BindTexture(pTexture->GetAddress(pTexture->Regist(&TEXTURE_NAME)));	//テクスチャ登録
 
-	pResult_Screen->Init();
+	pResult_Screen->Init();	//初期化
 
 	return pResult_Screen;
 }

@@ -13,7 +13,11 @@
 #include "keyboard_UI.h"
 #include "mouse_UI.h"
 
+//=============================================
+//前方宣言
+//=============================================
 class CPlayer;
+
 //=============================================
 //チュートリアルUIクラス
 //=============================================
@@ -54,6 +58,8 @@ private:
 	CKeyboard_UI* m_pKeyboardReload_UI;
 	CMouse_UI* m_pMouseshot_UI;
 	CMouse_UI* m_pMouseshotmode_UI;
+
+	void CreateUI();
 };
 
 #endif // DEBUG

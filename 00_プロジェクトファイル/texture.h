@@ -1,6 +1,6 @@
 //=============================================
 //
-//3DTemplate[texture.h]
+//テクスチャ管理[texture.h]
 //Auther Matsuda Towa
 //
 //=============================================
@@ -9,19 +9,12 @@
 #define _TEXTURE_H_
 #include "main.h"
 
+//=============================================
+// テクスチャ管理クラス
+//=============================================
 class CTexture
 {
 public:
-	enum TEXTURE
-	{
-		EFFECT = 0,
-		FIELD,
-		NUMBER,
-		RESULT,
-		TITLE,
-		TEXTURE_MAX,
-	};
-	static const std::string TEXTURE_NAME[TEXTURE_MAX];
 	static const int MAX_TEX = 256; //テクスチャの数
 	CTexture();
 	~CTexture();

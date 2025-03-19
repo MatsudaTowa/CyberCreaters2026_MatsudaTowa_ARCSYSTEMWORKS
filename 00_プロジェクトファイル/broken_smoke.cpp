@@ -6,6 +6,7 @@
 //=============================================
 #include "broken_smoke.h"
 
+//スモークのカラー
 const D3DXCOLOR CBrokenSmoke::COLOR = { 0.1f,0.1f,0.1f,1.0f };
 
 //スモークのサイズ
@@ -29,6 +30,7 @@ CBrokenSmoke::~CBrokenSmoke()
 //=============================================
 HRESULT CBrokenSmoke::Init()
 {
+	//親クラスの初期化
 	CSmoke::Init();
 
 	//サイズ代入
@@ -43,12 +45,16 @@ HRESULT CBrokenSmoke::Init()
 	std::uniform_real_distribution<float> number_z(MOVE_Z_MIN, MOVE_Z_MAX);
 
 	D3DXVECTOR3 move = GetMove();
+
 	//移動量代入
 	move = { number_x(random),number_y(random),number_z(random)};
 
+	//移動量設定
 	SetMove(move);
 
+	//色設定
 	SetColor(COLOR);
+
 	return S_OK;
 }
 
@@ -57,6 +63,7 @@ HRESULT CBrokenSmoke::Init()
 //=============================================
 void CBrokenSmoke::Uninit()
 {
+	//親クラスの終了
 	CSmoke::Uninit();
 }
 
@@ -65,6 +72,7 @@ void CBrokenSmoke::Uninit()
 //=============================================
 void CBrokenSmoke::Update()
 {
+	//親クラスの更新
 	CSmoke::Update();
 }
 
@@ -73,5 +81,6 @@ void CBrokenSmoke::Update()
 //=============================================
 void CBrokenSmoke::Draw()
 {
+	//親クラスの描画
 	CSmoke::Draw();
 }

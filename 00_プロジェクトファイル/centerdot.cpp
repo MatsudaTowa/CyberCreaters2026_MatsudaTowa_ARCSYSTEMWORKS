@@ -7,6 +7,7 @@
 #include "centerdot.h"
 #include "manager.h"
 
+//テクスチャパス
 const std::string CCenterDot::CENTERDOT_TEXTURE_NAME = "data\\TEXTURE\\crosshair001.png";
 
 //=============================================
@@ -87,11 +88,11 @@ CCenterDot* CCenterDot::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 siz
 
 	pCenterDot->SetPos(pos); //pos設定
 	pCenterDot->SetSize(size); //サイズ設定
-	pCenterDot->SetRot(rot);
-	pCenterDot->SetColor(col);
+	pCenterDot->SetRot(rot);	//方向設定
+	pCenterDot->SetColor(col);	//色設定
 
 	pCenterDot->SetType(OBJECT_TYPE_RETICLE); //タイプ設定
-	pCenterDot->Init();
+	pCenterDot->Init();	//初期化
 
 	return pCenterDot;
 }

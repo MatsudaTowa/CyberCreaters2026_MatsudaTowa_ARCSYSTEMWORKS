@@ -1,6 +1,6 @@
 //=============================================
 //
-//3DTemplate[block.h]
+//ブロック処理[block.cpp]
 //Auther Matsuda Towa
 //
 //=============================================
@@ -61,9 +61,12 @@ void CBlock::Update()
 	CObjectX::Update();
 
 #ifdef _DEBUG
+	//デバッグでブロック一括破壊
 	if (CManager::GetInstance()->GetKeyboard()->GetTrigger(DIK_0))
 	{
+		//破片を生成
 		CreatePiece();
+		//終了処理
 		Uninit();
 	}
 #endif // _DEBUG
@@ -83,14 +86,14 @@ void CBlock::CreatePiece()
 	}
 
 	for (int nNumCreate = INT_ZERO; nNumCreate < NUM_PIECE; ++nNumCreate)
-	{
+	{//動かない破片を生成
 		std::random_device seed;
 		std::mt19937 random(seed());
 		std::uniform_real_distribution<float> rot(PIECE_ROTATION_MIN, PIECE_ROTATION_MAX);
 		CBlock_Piece::Create(GetPos(), { rot(random),FLOAT_ZERO,rot(random) }, STACK_PIECE_SCALE, false);
 	}
 	for (int nNumCreate = INT_ZERO; nNumCreate < NUM_PIECE; ++nNumCreate)
-	{
+	{//動く破片を生成
 		std::random_device seed;
 		std::mt19937 random(seed());
 		std::uniform_real_distribution<float> rot(PIECE_ROTATION_MIN, PIECE_ROTATION_MAX);
@@ -139,12 +142,11 @@ CBlock* CBlock::Create(BLOCKTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLi
 	
 	CModel* pModel = CManager::GetInstance()->GetModel();
 
-	pBlock->m_type = type;
+	pBlock->m_type = type; //タイプ設定
 	pBlock->SetPos(pos); //pos設定
 	pBlock->SetRot(rot); //pos設定
 	pBlock->m_nLife = nLife; //寿命代入
 	pBlock->m_bBreak = bBreak; //壊せるかどうか
-	//pBlock->BindTexture(m_pTextureTemp);
 
 	//Xファイル読み込み
 	pBlock->BindXFile(pModel->GetModelInfo(pModel->Regist(MODEL_NAME)).pBuffMat,
@@ -152,6 +154,8 @@ CBlock* CBlock::Create(BLOCKTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLi
 		pModel->GetModelInfo(pModel->Regist(MODEL_NAME)).pMesh);
 
 	pBlock->SetType(OBJECT_TYPE_BLOCK); //タイプ設定
+
+	//初期化処理
 	pBlock->Init();
 	
 	return pBlock;
